@@ -91,11 +91,7 @@ public class BitcoinDataProvidingApplication {
                         .body(tradingService.getTradingSignals(), Signal.class);
             }
 
-//            public Mono<ServerResponse> showProgressCollectingData(ServerRequest request) {
-//                return ServerResponse.ok()
-//                        .contentType(MediaType.TEXT_EVENT_STREAM)
-//                        .body(service.startReadingData(), OHLCData.class);
-//            }
+
         }
         @Bean
         RouterFunction<?> routes(RouteHandler handler){

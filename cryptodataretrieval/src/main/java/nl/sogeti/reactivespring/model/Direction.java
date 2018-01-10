@@ -1,7 +1,7 @@
 package nl.sogeti.reactivespring.model;
 
 /**
- *  direction of a Signal
+ *  Type of Signal
  */
 public enum Direction {
     BEARISH, BULLISH;

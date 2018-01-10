@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public class TradingService {
 
-    private final Double MINIMUM_MOVEMENT = 0.2;
+    private static final Double MINIMUM_MOVEMENT = 0.2;
 
     @Autowired
     private BitcoinDataService bitcoinPriceService;
@@ -41,7 +41,4 @@ public class TradingService {
         return percentage > MINIMUM_MOVEMENT;
     }
 
-    private Double calculatePercentage(Double difference, Double weightedPrice) {
-        return (difference / weightedPrice) * 100.0;
-    }
 }

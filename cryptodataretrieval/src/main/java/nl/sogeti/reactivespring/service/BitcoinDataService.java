@@ -17,7 +17,6 @@ import java.util.stream.Stream;
 @Service
 public class BitcoinDataService {
 
-
     private Path filePath;
 
     @Autowired
