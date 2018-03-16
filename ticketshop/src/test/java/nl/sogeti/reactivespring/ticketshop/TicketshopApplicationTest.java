@@ -1,5 +1,6 @@
 package nl.sogeti.reactivespring.ticketshop;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import nl.sogeti.reactivespring.model.TicketRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.reactive.config.EnableWebFlux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
@@ -16,6 +18,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@EnableWebFlux
 public class TicketshopApplicationTest {
 
     @Autowired
@@ -26,18 +29,21 @@ public class TicketshopApplicationTest {
 
     @Test
     public void buyTicketTest() throws Exception {
-        TicketRequest ticketRequest = new TicketRequest("Rolling Stones", 5, "Kees");
+        TicketRequest ticketRequest = new TicketRequest("Rolling Stones", "Kees", 5);
+        ObjectMapper objectMapper = new ObjectMapper();
+        System.out.println(objectMapper.writeValueAsString(ticketRequest));
 
         webTestClient.post().uri("/buyTicket")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_STREAM_JSON)
+//                .accept(MediaType.APPLICATION_JSON)
                 .body(Mono.just(ticketRequest), TicketRequest.class)
                 .exchange()
                 .expectStatus().isOk()
-                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+//                .expectHeader().contentType(MediaType.APPLICATION_JSON)
                 .expectBody()
                 .jsonPath("$.orderId").isNotEmpty()
                 .jsonPath("$.event").isEqualTo("Rolling Stones");
+
     }
 
 }

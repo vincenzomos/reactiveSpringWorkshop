@@ -12,17 +12,18 @@ import java.util.List;
 @Service
 public class TradingService {
 
-    private static final Double MINIMUM_MOVEMENT = 0.2;
+    private static final Double MINIMUM_PRICECHANGE_PERCENTAGE = 0.2;
 
     @Autowired
     private BitcoinDataService bitcoinPriceService;
+
     /**
-     *
-     * @return All the Bitcoin pricedata, emitting a price every second.
+     * Gives a stream of Trading Signals
+     * @return trading Signals as a {@link Flux<Signal>}
      */
     public Flux<Signal> getTradingSignals() {
-        return bitcoinPriceService.getBitcoinData().buffer(5)
-                .filter(list -> bigChange(list))
+        return bitcoinPriceService.getHotBitcoinData().buffer(5)
+                .filter(list -> didThePriceMoveBig(list))
                 .map(list -> createSignal(list));
     }
 
@@ -33,12 +34,12 @@ public class TradingService {
         return new Signal("Trading signal for BTC/USD", last.getDate(), Direction.getDirectionByValue(difference));
     }
 
-    private boolean bigChange(List<OHLCData> list) {
+    private boolean didThePriceMoveBig(List<OHLCData> list) {
         OHLCData first = list.get(0);
         OHLCData last = list.get(4);
         Double difference = Math.abs(first.getWeightedPrice() - last.getWeightedPrice());
         Double percentage = (difference/ first.getWeightedPrice()) * 100;
-        return percentage > MINIMUM_MOVEMENT;
+        return percentage > MINIMUM_PRICECHANGE_PERCENTAGE;
     }
 
 }

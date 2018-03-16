@@ -16,8 +16,10 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import reactor.core.publisher.ConnectableFlux;
 import reactor.core.publisher.Mono;
 
+import javax.annotation.PostConstruct;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -28,25 +30,17 @@ import java.nio.file.Paths;
 import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
+/**
+ * Example reactive application that will stream bitcoinprices
+ *
+ * Disclaimer: This class mixes the BaseApplication and the Routing of the endpoints. In a real world application
+ * it is a better practice to have these in separated files.
+ * But for this workshop this might be a better way to get an idea of
+ * the integration of these parts.
+ */
 @SpringBootApplication
 @ComponentScan(basePackages ={"nl.sogeti.reactivespring", "nl.sogeti.reactivespring.bitcoindata"})
 public class BitcoinDataProvidingApplication {
-
-    @Bean
-    Writer fileWriter(){
-        FileWriter writer = null;
-        try {
-            writer = new FileWriter(ClassLoader.getSystemResource("bitcoin_krakenData.csv").getFile());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return writer;
-    }
-
-    @Bean
-    WebClient client() {
-        return WebClient.create("https://api.kraken.com/0/public");
-    }
 
     @Bean
     Path bitcoinDataPath() {
@@ -62,7 +56,6 @@ public class BitcoinDataProvidingApplication {
     public static void main(String[] args) {
         SpringApplication.run(BitcoinDataProvidingApplication.class);
     }
-
 
     @Configuration
     class FunctionRouteConfiguration {
@@ -85,37 +78,35 @@ public class BitcoinDataProvidingApplication {
                         .body(service.getBitcoinData(), OHLCData.class);
             }
 
+            public Mono<ServerResponse> streamDataHotFlux(ServerRequest request) {
+                return ServerResponse.ok()
+                        .contentType(MediaType.TEXT_EVENT_STREAM)
+                        .body(service.getHotBitcoinData(), OHLCData.class);
+            }
+
+            public Mono<ServerResponse> streamDataConnect(ServerRequest request) {
+                return ServerResponse.ok()
+                        .contentType(MediaType.TEXT_EVENT_STREAM)
+                        .body(service.getHotBitcoinDataFromConnectable(), OHLCData.class);
+            }
+
             public Mono<ServerResponse> streamSignals(ServerRequest request) {
                 return ServerResponse.ok()
                         .contentType(MediaType.TEXT_EVENT_STREAM)
                         .body(tradingService.getTradingSignals(), Signal.class);
             }
-
-
         }
         @Bean
         RouterFunction<?> routes(RouteHandler handler){
             return route(GET("/streamData"), handler::streamData)
-                    .andRoute(GET("/tradingAlerts"), handler::streamSignals);
+                    .andRoute(GET("/tradingAlerts"), handler::streamSignals)
+                    .andRoute(GET("/streamDataHotFlux"), handler::streamDataHotFlux)
+                    .andRoute(GET("/streamDataConnect"), handler::streamDataHotFlux);
+        }
+
+        @Bean
+        ConnectableFlux<OHLCData> hotBitcoinData(BitcoinDataService service) {
+            return service.getBitcoinData().publish();
         }
     }
-
-
-
-
-
-
 }
-//
-//@Data
-//@AllArgsConstructor
-//class Movie {
-//    private String id, title;
-//}
-//
-//@Data
-//@AllArgsConstructor
-//class MovieEvent {
-//    private Movie movie;
-//    private Date date;
-//}
