@@ -66,7 +66,7 @@ public class BitcoinDataService {
     }
 
     public Flux<OHLCData> getHotBitcoinDataFromConnectable() {
-        return Flux.from(connectableFlux);
+        return connectableFlux;
     }
 
 }
