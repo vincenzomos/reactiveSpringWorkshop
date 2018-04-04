@@ -23,7 +23,6 @@ public class SubscribeDemo
                 .doOnNext(elements::add)
                 .log();
 
-
         assertThat(elements, contains(1, 2, 3, 4));
     }
 
