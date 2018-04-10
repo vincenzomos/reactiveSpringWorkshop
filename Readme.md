@@ -45,8 +45,7 @@ You can allways later on dive a bit more in the theory. Links to some useful res
   ``
   Flux<String> fluxFromCollection = Flux.fromIterable(Arrays.asList("foo", "bar"));
   `` 
-  
-    
+      
   ### Mono
   The second way of doing this is with a Mono, which is a stream of 0..1 elements. Let’s try instantiating one:
   
@@ -82,17 +81,24 @@ Now let’s go through the sequence that we have logged one by one:
 4. onComplete() – This is called last, after receiving the last element. There’s actually a onError() as well, which would be called if there is an exception, but in this case, there isn’t    
 
 ### Practicing with Flux and Mono
- In the project reactivespring there is a package [nl.sogeti.reactivespring.basics]. In here are a couple of classes prefix with Part<number>...
- All these are some practice classes to implement some constructs for Monos and Fluxes.
- (Resource is [https://github.com/reactor/lite-rx-api-hands-on.git])
+ In the project reactivespring there is a package [nl.sogeti.reactivespring.basics]. In here are a couple of classes prefixed with Part<number>... can be found.
+ All these are some practice classes to implement some constructs for Monos and Fluxes. In here you'll also find some exampels wher Stepverifier is used. StepVerifier is a nice convenience class that makes it possible to verify how the stream you produce will behave. I made a selection of practices from the following source [https://github.com/reactor/lite-rx-api-hands-on.git])
  
 ### BackPressure
-Backpressure is one of the things that is considered a valuable asset when streaming data. It gives the subscriber the possibillity 
+Backpressure is one of the things that is considered a valuable asset when streaming data. It gives the subscriber the possibillity. Once again in the  
 to read data at it's own pace. 
  - request(n)
  - write
  - flush imediately so items are visual instanly
  - repeat
+ 
+ 
+### A reactive restservice
+The cryptodataretrieval project contains an example of a Spring restService in the class : RequestMappingStyleBitcoinDataController. Take a look at the class. Actually this looks quite familiar if you have worked with Spring MVC RequestMappings. Now start the application. If you're IDE is smart enough you can by just starting the class : BitcoinDataProvidingApplication. By just selecting the class and start. 
+You can also start from the commandline by running the following from the cryptodataretrieval folder:
+``
+mvn spring-boot:run  (test this first)
+``
  
 ### Reactive data repository
 
