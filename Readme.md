@@ -67,10 +67,6 @@ You can allways later on dive a bit more in the theory. Links to some useful res
  
  But really, knowing this cardinality is useful. This is because a few operations only make sense for one of the two types, and because it can be more expressive (imagine findOne() in a repository).
  
- ### Practicing with Flux and Mono
- In the project reactivespring there is a package [nl.sogeti.reactivespring.basics]. In here are a couple of classes prefix with Part<number>...
- All these are some practice classes to implement some constructs for Monos and Fluxes.
- (Resource is [https://github.com/reactor/lite-rx-api-hands-on.git])
 
 ### Getting Data from a Flux
 There is a unittest in  [nl.sogeti.reactivespring.basics] named SubscribeDemo with a method to get the data from the Flux. But the test fails.
@@ -85,6 +81,11 @@ Now let’s go through the sequence that we have logged one by one:
 3. onNext() – This is called on every single element
 4. onComplete() – This is called last, after receiving the last element. There’s actually a onError() as well, which would be called if there is an exception, but in this case, there isn’t    
 
+### Practicing with Flux and Mono
+ In the project reactivespring there is a package [nl.sogeti.reactivespring.basics]. In here are a couple of classes prefix with Part<number>...
+ All these are some practice classes to implement some constructs for Monos and Fluxes.
+ (Resource is [https://github.com/reactor/lite-rx-api-hands-on.git])
+ 
 ### BackPressure
 Backpressure is one of the things that is considered a valuable asset when streaming data. It gives the subscriber the possibillity 
 to read data at it's own pace. 
@@ -92,7 +93,6 @@ to read data at it's own pace.
  - write
  - flush imediately so items are visual instanly
  - repeat
- 
  
 ### Reactive data repository
 
