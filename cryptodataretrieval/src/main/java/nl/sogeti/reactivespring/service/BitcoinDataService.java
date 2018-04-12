@@ -22,13 +22,13 @@ import java.util.stream.Stream;
 public class BitcoinDataService {
 
     protected final Log logger = LogFactory.getLog(this.getClass());
-    private Path filePath;
+    private List<String> dataLines;
     private ConnectableFlux<OHLCData> connectableFlux;
     private Flux<OHLCData> hotBitcoinPriceFlux;
 
     @Autowired
-    public BitcoinDataService(Path filePath) {
-        this.filePath = filePath;
+    public BitcoinDataService(List<String> dataLines) {
+        this.dataLines = dataLines;
     }
 
     @PostConstruct
@@ -45,7 +45,7 @@ public class BitcoinDataService {
      * @return All the Bitcoin pricedata, emitting a price every second.
      */
     public Flux<OHLCData> getBitcoinData() {
-        try (Stream<String> bitcoinMinutePrices = Files.lines(filePath)) {
+        try (Stream<String> bitcoinMinutePrices = dataLines.stream()) {
             List<OHLCData> items = bitcoinMinutePrices
                     .map(line -> OHLCData.fromCSVLine(line))
                     .filter(optional -> optional.isPresent())
@@ -55,7 +55,7 @@ public class BitcoinDataService {
                     .delayElements(Duration.ofSeconds(1))
                     .onBackpressureDrop();
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return Flux.error(new IOException("Something went wrong with reading the data"));

@@ -1,6 +1,7 @@
 package nl.sogeti.reactivespring.service;
 
 import nl.sogeti.reactivespring.model.OHLCData;
+import nl.sogeti.reactivespring.util.Utils;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -13,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
+import java.util.List;
 import java.util.function.Supplier;
 
 import static org.junit.Assert.*;
@@ -20,15 +22,16 @@ import static org.junit.Assert.*;
 public class BitcoinDataServiceTest {
 
     private static Path filePath = null;
+    private static List<String> datalines = null;
     private BitcoinDataService service;
 
     @BeforeClass
     public static void beforeClass() throws IOException, URISyntaxException {
-        filePath =   Paths.get(ClassLoader.getSystemResource("bitcoin_minuteData.csv").toURI());
+        datalines = Utils.readDataFromResource("classpath:bitcoin_minuteData.csv");
     }
     @Before
-    public void setUp() throws URISyntaxException {
-        service = new BitcoinDataService(filePath);
+    public void setUp() {
+        service = new BitcoinDataService(datalines);
     }
     @Test
     public void getBitcoinData(){

@@ -4,6 +4,7 @@ import nl.sogeti.reactivespring.model.OHLCData;
 import nl.sogeti.reactivespring.model.Signal;
 import nl.sogeti.reactivespring.service.BitcoinDataService;
 import nl.sogeti.reactivespring.service.TradingService;
+import nl.sogeti.reactivespring.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -20,12 +22,9 @@ import reactor.core.publisher.ConnectableFlux;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.PostConstruct;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
+import java.io.*;
 import java.net.URISyntaxException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.List;
 
 import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
@@ -42,18 +41,36 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 @ComponentScan(basePackages ={"nl.sogeti.reactivespring", "nl.sogeti.reactivespring.bitcoindata"})
 public class BitcoinDataProvidingApplication {
 
+//    @Bean
+//    Path bitcoinDataPath() {
+//        Path filePath = null;
+//        try {
+//            filePath =  Paths.get(ClassLoader.getSystemResource("bitcoin_minuteData.csv").toURI());
+//        } catch (URISyntaxException e) {
+//            e.printStackTrace();
+//        }
+//        return filePath;
+//    }
+
     @Bean
-    Path bitcoinDataPath() {
-        Path filePath = null;
+    List<String> bitcoinDataList() {
+        System.out.println("TESTLOG : Start creating datalines ");
+        List<String> dataLines = null;
         try {
-            filePath =  Paths.get(ClassLoader.getSystemResource("bitcoin_minuteData.csv").toURI());
-        } catch (URISyntaxException e) {
+            dataLines = Utils.readDataFromResource("classpath:bitcoin_minuteData.csv");
+            if (dataLines != null) {
+                System.out.println("TESTLOG: datalines contains number :" + dataLines.size());
+            }
+
+        } catch (IOException e) {
+            System.out.println("Something went wrong with readin the data");
             e.printStackTrace();
         }
-        return filePath;
+        return dataLines;
     }
 
-    public static void main(String[] args) {
+
+        public static void main(String[] args) {
         SpringApplication.run(BitcoinDataProvidingApplication.class);
     }
 }
