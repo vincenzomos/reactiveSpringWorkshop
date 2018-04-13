@@ -27,7 +27,7 @@ public class SubscribeDemo
     }
 
     @Test
-    public void demoSubcriberFullImpl() {
+    public void demoSubcriberImpl() {
         List<Integer> elements = new ArrayList<>();
 
         Flux.just(1, 2, 3, 4)

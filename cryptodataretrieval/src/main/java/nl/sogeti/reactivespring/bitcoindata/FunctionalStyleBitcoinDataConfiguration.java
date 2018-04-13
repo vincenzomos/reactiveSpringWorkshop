@@ -19,7 +19,7 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 @Configuration
-public class FunctionalStyleBitcoinDataComponent {
+public class FunctionalStyleBitcoinDataConfiguration {
 
         @Component
         public class RouteHandler {
