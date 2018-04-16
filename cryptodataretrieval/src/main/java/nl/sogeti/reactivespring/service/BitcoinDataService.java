@@ -24,7 +24,6 @@ public class BitcoinDataService {
     protected final Log logger = LogFactory.getLog(this.getClass());
     private List<String> dataLines;
     private ConnectableFlux<OHLCData> connectableFlux;
-    private Flux<OHLCData> hotBitcoinPriceFlux;
 
     @Autowired
     public BitcoinDataService(List<String> dataLines) {
@@ -33,12 +32,8 @@ public class BitcoinDataService {
 
     @PostConstruct
     private void startHotBitcoinDataStream() {
-
         logger.info("Starting the Hot Flux.");
-        hotBitcoinPriceFlux = getBitcoinData().publish().autoConnect();
-        connectableFlux = getBitcoinData().publish();
-        connectableFlux.connect();
-        hotBitcoinPriceFlux.subscribe();
+        /* ###################### Start the ConnectableFlux so it streams as a Hot Flux ################### */
     }
     /**
      *
@@ -61,12 +56,15 @@ public class BitcoinDataService {
         return Flux.error(new IOException("Something went wrong with reading the data"));
     }
 
-    public Flux<OHLCData> getHotBitcoinData() {
-        return Flux.from(hotBitcoinPriceFlux);
-    }
 
+    /**
+     *  Return the bitcoindata as a Hot Stream.
+     *
+      * @return
+     */
     public Flux<OHLCData> getHotBitcoinDataFromConnectable() {
-        return connectableFlux;
+       /* ################### Return the hot stream ##################################*/
+        return null;
     }
 
 }

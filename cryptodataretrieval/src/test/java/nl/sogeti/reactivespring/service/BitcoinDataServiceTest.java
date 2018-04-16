@@ -21,7 +21,6 @@ import static org.junit.Assert.*;
 
 public class BitcoinDataServiceTest {
 
-    private static Path filePath = null;
     private static List<String> datalines = null;
     private BitcoinDataService service;
 
@@ -29,21 +28,19 @@ public class BitcoinDataServiceTest {
     public static void beforeClass() throws IOException, URISyntaxException {
         datalines = Utils.readDataFromResource("classpath:bitcoin_minuteData.csv");
     }
+
     @Before
     public void setUp() {
         service = new BitcoinDataService(datalines);
     }
+
     @Test
     public void getBitcoinData(){
-        long lineCount = 0;
-        try {
-            lineCount = Files.lines(filePath).count();
-        } catch (IOException e) {
-            fail("Unexpected IOException, test failed");
-        }
+        long expectedLineCount = datalines.size();
+
         StepVerifier.withVirtualTime(() -> service.getBitcoinData())
-                .thenAwait(Duration.ofSeconds(lineCount))
-                .expectNextCount(lineCount)
+                .thenAwait(Duration.ofSeconds(expectedLineCount))
+                .expectNextCount(expectedLineCount)
                 .expectComplete()
                 .log()
                 .verify();

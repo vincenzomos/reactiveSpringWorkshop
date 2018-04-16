@@ -22,9 +22,9 @@ public class TradingService {
      * @return trading Signals as a {@link Flux<Signal>}
      */
     public Flux<Signal> getTradingSignals() {
-        return bitcoinPriceService.getHotBitcoinData().buffer(5)
-                .filter(list -> didThePriceMoveBig(list))
-                .map(list -> createSignal(list));
+       /*  Implement a stream of signals here. You can use the convenience methods didThePriceMoveBig() and createSignal(). But feel free
+        * to change or implment somehting completely different */
+       return null;
     }
 
     private Signal createSignal(List<OHLCData> list) {
