@@ -15,7 +15,7 @@ You can allways later on dive a bit more in the theory. Links to some useful res
  Think about a stream of thousands of stock updates per second coming into a financial application, and for it to have to respond 
  to those updates in a timely manner.
  
- * Reactor is targeting Java 8 and providing an Rx-conforming API
+ * Reactor is targeting Java 8 and implments The Reactive Streams specification
  * It uses the same approach and philosophy as RxJava despite some API differences
  * Reactor is a core dependency in the reactive programming model support of Spring Framework 5.
  
@@ -80,6 +80,7 @@ Now let’s go through the sequence that we have logged one by one:
 3. onNext() – This is called on every single element
 4. onComplete() – This is called last, after receiving the last element. There’s actually a onError() as well, which would be called if there is an exception, but in this case, there isn’t    
 
+
 ### BackPressure
 The next thing we should consider is backpressure. In our example, the subscriber is telling the producer to push every single element at once.
 This could end up becoming overwhelming for the subscriber, consuming all of its resources.
@@ -91,6 +92,7 @@ at a time.
 
 We can modify our Subscriber implementation to apply backpressure. Let’s tell the upstream to only send two elements at a time by using request():
 to read data at it's own pace. 
+ 
  - request(n)
  - write
  - flush imediately so items are visual instanly
@@ -98,7 +100,7 @@ to read data at it's own pace.
  
 ### Practicing with Flux and Mono
  In the project reactivespring there is a package [nl.sogeti.reactivespring.basics]. In here are a couple of classes prefixed with Part<number>... can be found.
- All these are some practice classes to implement some constructs for Monos and Fluxes. In here you'll also find some exampels wher Stepverifier is used. StepVerifier is a nice convenience class that makes it possible to verify how the stream you produce will behave. I made a selection of practices from the following source [https://github.com/reactor/lite-rx-api-hands-on.git])
+ All these are some practice classes to implement some constructs for Monos and Fluxes. In here you'll also find some examples where Stepverifier is used. StepVerifier is a nice convenience class that makes it possible to verify how the stream you produce will behave. I made a selection of practices from the following source [https://github.com/reactor/lite-rx-api-hands-on.git])
 
 
 ### A reactive restservice
@@ -147,7 +149,7 @@ Modify that class so that GET requests to "/streamDataFunctional" are routed to 
 - More info on [the Spring WebFlux.fn reference documentation](http://docs.spring.io/spring-framework/docs/5.0.3.RELEASE/spring-framework-reference/web.html#web-reactive-server-functional)
 
 ### Cold Stream vs Hot Stream
-We implemented this service now but maybe you've noticed that the data is just showing the same data all over again.
+We implemented this service now but maybe you've noticed that the data is just showing the same data on each request all over again.
 This is because the data we return are is static, fixed length streams which are easy to deal with.
 A more realistic use case for reactive might be something that happens infinitely. In this example bitcoin price changes will never stop off course.
 These types of streams are called hot streams, as they are always running and can be subscribed to at any point in time, missing the start of the data.
