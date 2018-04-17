@@ -17,8 +17,7 @@ public class Utils {
      */
     public static List<String> readDataFromResource(String resourceLocation)
             throws IOException {
-        File bitcoinDataFile = ResourceUtils.getFile(resourceLocation);
-        FileInputStream inputStream = new FileInputStream(bitcoinDataFile);
+        FileInputStream inputStream = new FileInputStream(ResourceUtils.getFile(resourceLocation));
         List<String> lines =new ArrayList<>();
         try (BufferedReader br
                      = new BufferedReader(new InputStreamReader(inputStream))) {
