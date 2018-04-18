@@ -29,14 +29,14 @@ public class TradingService {
 
     private Signal createSignal(List<OHLCData> list) {
         OHLCData first = list.get(0);
-        OHLCData last = list.get(4);
+        OHLCData last = list.get(list.size()-1);
         Double difference = first.getWeightedPrice() - last.getWeightedPrice();
         return new Signal("Trading signal for BTC/USD", last.getDate(), Direction.getDirectionByValue(difference));
     }
 
     private boolean didThePriceMoveBig(List<OHLCData> list) {
         OHLCData first = list.get(0);
-        OHLCData last = list.get(4);
+        OHLCData last = list.get(list.size() -1);
         Double difference = Math.abs(first.getWeightedPrice() - last.getWeightedPrice());
         Double percentage = (difference/ first.getWeightedPrice()) * 100;
         return percentage > MINIMUM_PRICECHANGE_PERCENTAGE;

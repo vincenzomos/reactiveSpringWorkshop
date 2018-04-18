@@ -87,21 +87,17 @@ This could end up becoming overwhelming for the subscriber, consuming all of its
 Backpressure is when a downstream can tell an upstream to send it fewer data in order to prevent it from being overwhelmed.
 
 In the SubscribeDemo test class there are also showing the principles of backpressure.
-The test demoSubcriberImpl will just read all items at once, while the other method demoSubcriberWithAdaptedBackpressure instructs the publisher to send 2 items
+The test `demoSubcriberImpl` will just read all items at once, while the other method `demoSubcriberWithAdaptedBackpressure` instructs the publisher to send 2 items
 at a time.
 
-We can modify our Subscriber implementation to apply backpressure. Let’s tell the upstream to only send two elements at a time by using request():
-to read data at it's own pace. 
- 
- - request(n)
- - write
- - flush imediately so items are visual instanly
- - repeat
+
  
 ### Practicing with Flux and Mono
  In the project reactivespring there is a package [nl.sogeti.reactivespring.basics]. In here are a couple of classes prefixed with Part<number>... can be found.
  All these are some practice classes to implement some constructs for Monos and Fluxes. In here you'll also find some examples where Stepverifier is used. StepVerifier is a nice convenience class that makes it possible to verify how the stream you produce will behave. I made a selection of practices from the following source [https://github.com/reactor/lite-rx-api-hands-on.git])
+Please try to solve them. 
 
+Useful info can be found here [Reactor documentation](http://projectreactor.io/docs/core/release/reference/docs/index.html)
 
 ### A reactive restservice
 
@@ -122,7 +118,7 @@ If everything started correctly you should be able to look at a stream of data i
 curl http://localhost:8085/streamData
 ``
 
-In a browser it can work as well. I did with Chrome and that went fine. The thing is the browser needs to know how to deal with Server Sent events.
+In a browser it should work as well. I did with Chrome and that went fine. The thing is the browser needs to know how to deal with Server Sent events.
 
 
 ### Create your first HandlerFunction + RouterFunction
@@ -144,12 +140,24 @@ To route requests to that handler, you need to expose a RouterFunction to Spring
 Modify that class so that GET requests to "/streamDataFunctional" are routed to the handler you just implemented.
 
 *Some tips*
+- There is already a unit/integration test available for the endpoint 
+  (`nl.sogeti.reactivespring.bitcoindata.FunctionalStyleBitcoinDataConfigurationTest`)
 - The content type "application/json" results in a finite collection
 - Browsers only can consume a stream by producing Server Sent events. (`MediaType.TEXT_EVENT_STREAM`)
 - More info on [the Spring WebFlux.fn reference documentation](http://docs.spring.io/spring-framework/docs/5.0.3.RELEASE/spring-framework-reference/web.html#web-reactive-server-functional)
 
+## A Trading Signal Service
+Once you have your API working it would be nice if we can also find a way to do some useful stuff with the stream of bitcoindata.
+
+There is already an existing Service named `TradingService` We would like to have a service that can
+stream Signals based on price movements. The service already has a couple of simple convenience methods to notice and create Signals.
+Try to use this to make the method return a stream of Signals. 
+  
+Once again make the necessary adjustments to create and endpoint for this service.  
+
+
 ### Cold Stream vs Hot Stream
-We implemented this service now but maybe you've noticed that the data is just showing the same data on each request all over again.
+When we implemented the endpoint  `/streamData`  you might have noticed that it is just showing the same data on each request all over again.
 This is because the data we return are is static, fixed length streams which are easy to deal with.
 A more realistic use case for reactive might be something that happens infinitely. In this example bitcoin price changes will never stop off course.
 These types of streams are called hot streams, as they are always running and can be subscribed to at any point in time, missing the start of the data.
@@ -169,7 +177,8 @@ ConnectableFlux<Object> publish = Flux.create(fluxSink -> {
 
 By calling publish() we are given a ConnectableFlux. This means that calling subscribe() won’t cause it start emitting, allowing us to add multiple subscriptions:
 
-Now try to add a ConnectableFlux of data in the BitcoinDataService and create another endpoint for that named "/hotStreamData".
+Now try to add a ConnectableFlux of data in the BitcoinDataService and create another endpoint for that named `"/hotStreamData".`
+And then test if this stream will continue.
 
 
 
