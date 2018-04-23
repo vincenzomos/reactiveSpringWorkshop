@@ -32,7 +32,7 @@ public class FunctionalStyleBitcoinDataConfiguration {
             }
 
             public Mono<ServerResponse> streamData(ServerRequest request) {
-                /* IMPLEMENT YOUR STERAMING RESPONSE HERE */
+                /* IMPLEMENT YOUR STREAMING RESPONSE HERE */
                 return null;
             }
 
@@ -40,7 +40,7 @@ public class FunctionalStyleBitcoinDataConfiguration {
 
         @Bean
         RouterFunction<?> routes(RouteHandler handler){
-            /* IMPLEMENT YOUR STERAMING RESPONSE HERE */
+            /* IMPLEMENT YOUR ROUTERS HERE */
             return null;
         }
 

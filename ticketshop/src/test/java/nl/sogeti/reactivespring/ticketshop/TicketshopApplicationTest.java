@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.config.EnableWebFlux;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
@@ -19,7 +20,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableWebFlux
-public class TicketshopApplicationTest {
+public class TicketshopApplicationTest{
 
     @Autowired
     private WebTestClient webTestClient;
@@ -34,12 +35,10 @@ public class TicketshopApplicationTest {
         System.out.println(objectMapper.writeValueAsString(ticketRequest));
 
         webTestClient.post().uri("/buyTicket")
-                .contentType(MediaType.APPLICATION_STREAM_JSON)
-//                .accept(MediaType.APPLICATION_JSON)
-                .body(Mono.just(ticketRequest), TicketRequest.class)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON)
+                .body(Flux.just(ticketRequest), TicketRequest.class)
                 .exchange()
-                .expectStatus().isOk()
-//                .expectHeader().contentType(MediaType.APPLICATION_JSON)
                 .expectBody()
                 .jsonPath("$.orderId").isNotEmpty()
                 .jsonPath("$.event").isEqualTo("Rolling Stones");

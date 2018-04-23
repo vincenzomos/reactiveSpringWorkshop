@@ -18,13 +18,16 @@ import org.springframework.data.mongodb.repository.Tailable;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.reactive.function.server.RequestPredicates;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -84,12 +87,13 @@ class FunctionRouteConfiguration {
             this.ticketService = ticketService;
         }
 
-        public Mono<ServerResponse> buyTicket(ServerRequest request) {
+        public Mono<ServerResponse> buyTicket(@Validated ServerRequest request) {
 
             Mono<TicketRequest> ticketRequest = request.bodyToMono(TicketRequest.class);
-            return ServerResponse.ok()
+            UUID newId = UUID.randomUUID();
+            return ServerResponse.created(UriComponentsBuilder.fromPath("tickettransaction/" + newId).build().toUri())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .body(ticketService.buyTicket(ticketRequest), TicketTransaction.class);
+                    .body(ticketService.buyTicket(newId, ticketRequest), TicketTransaction.class);
         }
 
         public Mono<ServerResponse> showTickets(ServerRequest request) {
@@ -136,9 +140,9 @@ class TicketService {
      *
      * @param ticketRequestMono
      */
-    public Mono<TicketTransaction> buyTicket(Mono<TicketRequest> ticketRequestMono) {
+    public Mono<TicketTransaction> buyTicket(UUID id, Mono<TicketRequest> ticketRequestMono) {
         this.logger.info("TESTLOG Do we get Here ");
-        return ticketRequestMono.flatMap(request -> createTicketTransaction(request));
+        return ticketRequestMono.flatMap(request -> createTicketTransaction(id, request));
     }
 
     /**
@@ -157,8 +161,8 @@ class TicketService {
         return ticketRepository.findTicketTransactionBy();
     }
 
-    private Mono<TicketTransaction> createTicketTransaction(TicketRequest ticketRequest) {
-        TicketTransaction transaction =  new TicketTransaction(UUID.randomUUID().toString(), ticketRequest.getEvent(), ticketRequest.getAmount(),
+    private Mono<TicketTransaction> createTicketTransaction(UUID id, TicketRequest ticketRequest) {
+        TicketTransaction transaction =  new TicketTransaction(id.toString(), ticketRequest.getEvent(), ticketRequest.getAmount(),
                 ticketRequest.getCustomerName(), LocalDateTime.now());
         return ticketRepository.save(transaction);
     }
