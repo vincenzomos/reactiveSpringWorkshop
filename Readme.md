@@ -115,7 +115,7 @@ mvn spring-boot:run
 If everything started correctly you should be able to look at a stream of data in the following way:
 
 ``
-curl http://localhost:8085/streamData
+curl http://localhost:8085/annotationBitcoinPrices
 ``
 
 In a browser it should work as well. I did with Chrome and that went fine. The thing is the browser needs to know how to deal with Server Sent events.

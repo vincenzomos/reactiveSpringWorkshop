@@ -19,26 +19,25 @@ public class TradingService {
 
     /**
      * Gives a stream of Trading Signals
+     *
      * @return trading Signals as a {@link Flux<Signal>}
      */
     public Flux<Signal> getTradingSignals() {
-        return bitcoinPriceService.getHotBitcoinDataFromConnectable().buffer(5)
-                .filter(list -> didThePriceMoveBig(list))
-                .map(list -> createSignal(list));
+        return null;
     }
 
     private Signal createSignal(List<OHLCData> list) {
         OHLCData first = list.get(0);
-        OHLCData last = list.get(list.size()-1);
+        OHLCData last = list.get(list.size() - 1);
         Double difference = first.getWeightedPrice() - last.getWeightedPrice();
         return new Signal("Trading signal for BTC/USD", last.getDate(), Direction.getDirectionByValue(difference));
     }
 
     private boolean didThePriceMoveBig(List<OHLCData> list) {
         OHLCData first = list.get(0);
-        OHLCData last = list.get(list.size() -1);
+        OHLCData last = list.get(list.size() - 1);
         Double difference = Math.abs(first.getWeightedPrice() - last.getWeightedPrice());
-        Double percentage = (difference/ first.getWeightedPrice()) * 100;
+        Double percentage = (difference / first.getWeightedPrice()) * 100;
         return percentage > MINIMUM_PRICECHANGE_PERCENTAGE;
     }
 
