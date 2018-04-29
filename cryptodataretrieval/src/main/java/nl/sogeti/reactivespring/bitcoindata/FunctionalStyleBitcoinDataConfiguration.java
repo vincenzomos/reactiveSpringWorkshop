@@ -43,14 +43,9 @@ public class FunctionalStyleBitcoinDataConfiguration {
             public Mono<ServerResponse> streamDataHotFlux(ServerRequest request) {
                 return ServerResponse.ok()
                         .contentType(MediaType.TEXT_EVENT_STREAM)
-                        .body(service.getHotBitcoinData(), OHLCData.class);
-            }
-
-            public Mono<ServerResponse> streamDataConnect(ServerRequest request) {
-                return ServerResponse.ok()
-                        .contentType(MediaType.TEXT_EVENT_STREAM)
                         .body(service.getHotBitcoinDataFromConnectable(), OHLCData.class);
             }
+
 
             public Mono<ServerResponse> streamSignals(ServerRequest request) {
                 return ServerResponse.ok()
@@ -63,8 +58,7 @@ public class FunctionalStyleBitcoinDataConfiguration {
         RouterFunction<?> routes(RouteHandler handler){
             return route(GET("/streamData"), handler::streamData)
                     .andRoute(GET("/tradingAlerts"), handler::streamSignals)
-                    .andRoute(GET("/streamDataHotFlux"), handler::streamDataHotFlux)
-                    .andRoute(GET("/streamDataConnect"), handler::streamDataHotFlux);
+                    .andRoute(GET("/streamDataHotFlux"), handler::streamDataHotFlux);
         }
 
         @Bean

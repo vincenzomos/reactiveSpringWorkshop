@@ -22,7 +22,7 @@ public class TradingService {
      * @return trading Signals as a {@link Flux<Signal>}
      */
     public Flux<Signal> getTradingSignals() {
-        return bitcoinPriceService.getHotBitcoinData().buffer(5)
+        return bitcoinPriceService.getHotBitcoinDataFromConnectable().buffer(5)
                 .filter(list -> didThePriceMoveBig(list))
                 .map(list -> createSignal(list));
     }

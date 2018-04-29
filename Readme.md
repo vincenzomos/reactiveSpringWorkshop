@@ -151,9 +151,11 @@ Once you have your API working it would be nice if we can also find a way to do 
 
 There is already an existing Service named `TradingService` We would like to have a service that can
 stream Signals based on price movements. The service already has a couple of simple convenience methods to notice and create Signals.
+Also now there already is a constant for the minimal price move in percentage (0.2)  That is pretty low but off course you would like to see some
+Signals.
 Try to use this to make the method return a stream of Signals. 
   
-Once again make the necessary adjustments to create and endpoint for this service.  
+Once again make the necessary adjustments to create an endpoint for this service.  
 
 
 ### Cold Stream vs Hot Stream

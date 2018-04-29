@@ -24,10 +24,10 @@ public class TicketshopBuySimulator {
         Flux<TicketRequest> ticketStream = Flux.interval(Duration.ofSeconds(2)).map(i -> ticketRequestFactory.constructRandomTicketRequest());
 
         client.post()
-                .uri("/buyTicket")
-                .contentType(MediaType.APPLICATION_JSON)
+                .uri("/ticketTest")
+                .contentType(MediaType.APPLICATION_STREAM_JSON)
 //                .body(Mono.just(ticketRequestFactory.constructRandomTicketRequest()), TicketRequest.class)
-                .body(ticketStream.take(2), TicketRequest.class)
+                .body(ticketStream, TicketRequest.class)
                 .retrieve()
                 .bodyToFlux(TicketTransaction.class)
                 .log()

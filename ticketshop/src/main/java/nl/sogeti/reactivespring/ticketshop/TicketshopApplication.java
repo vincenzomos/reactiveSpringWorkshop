@@ -33,6 +33,7 @@ import java.util.UUID;
 
 import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
 import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
+import static org.springframework.web.reactive.function.server.RequestPredicates.contentType;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 @SpringBootApplication
@@ -88,7 +89,7 @@ class FunctionRouteConfiguration {
 
             Mono<TicketRequest> ticketRequest = request.bodyToMono(TicketRequest.class);
             return ServerResponse.ok()
-                    .contentType(MediaType.APPLICATION_JSON)
+                    .contentType(MediaType.APPLICATION_STREAM_JSON)
                     .body(ticketService.buyTicket(ticketRequest), TicketTransaction.class);
         }
 
@@ -108,7 +109,8 @@ class FunctionRouteConfiguration {
 
     @Bean
     RouterFunction<?> routes(RouteHandler handler) {
-        return route(POST("/buyTicket"), handler::buyTicket)
+        return route(POST("/buyTicket").and(contentType(MediaType.APPLICATION_STREAM_JSON)), handler::buyTicket)
+//             .andRoute(POST("/buyTickets").and(contentType(MediaType.APPLICATION_STREAM_JSON)), handler::buyTicket)
             .andRoute(GET("/showTickets"), handler::showTickets)
             .andRoute(GET("/showTicketsStream"), handler::showTicketsStream);
     }
@@ -127,6 +129,7 @@ class TicketService {
     protected final Log logger = LogFactory.getLog(this.getClass());
     private TicketRepository ticketRepository;
 
+    @Autowired
     public TicketService(TicketRepository ticketRepository) {
         this.ticketRepository = ticketRepository;
     }
@@ -139,6 +142,17 @@ class TicketService {
     public Mono<TicketTransaction> buyTicket(Mono<TicketRequest> ticketRequestMono) {
         this.logger.info("TESTLOG Do we get Here ");
         return ticketRequestMono.flatMap(request -> createTicketTransaction(request));
+    }
+
+    /**
+     * Service to buy a ticket
+     *
+     * @param ticketRequestFlux
+     */
+    public Flux<TicketTransaction> buyTickets(Flux<TicketRequest> ticketRequestFlux) {
+        this.logger.info("TESTLOG Do we get Here in the TICKETS ");
+//        return ticketRequestFlux.map(request -> createTicketTransactions(request));
+        return createTicketTransactions(ticketRequestFlux);
     }
 
     /**
@@ -161,5 +175,13 @@ class TicketService {
         TicketTransaction transaction =  new TicketTransaction(UUID.randomUUID().toString(), ticketRequest.getEvent(), ticketRequest.getAmount(),
                 ticketRequest.getCustomerName(), LocalDateTime.now());
         return ticketRepository.save(transaction);
+    }
+
+    private Flux<TicketTransaction> createTicketTransactions(Flux<TicketRequest> ticketRequests) {
+      return  ticketRequests.flatMap(request -> {
+           TicketTransaction transaction =  new TicketTransaction(UUID.randomUUID().toString(), request.getEvent(), request.getAmount(),
+                   request.getCustomerName(), LocalDateTime.now());
+            return ticketRepository.save(transaction);
+       });
     }
 }
