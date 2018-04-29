@@ -120,7 +120,6 @@ curl http://localhost:8085/annotationBitcoinPrices
 
 In a browser it should work as well. I did with Chrome and that went fine. The thing is the browser needs to know how to deal with Server Sent events.
 
-
 ### Create your first HandlerFunction + RouterFunction
 Now you have seen how a service is implemented using the annotations. For a change it might be nice to implement a service the functional-reactive way.
 
@@ -145,6 +144,8 @@ Modify that class so that GET requests to "/streamData" are routed to the handle
 - The content type "application/json" results in a finite collection
 - Browsers only can consume a stream by producing Server Sent events. (`MediaType.TEXT_EVENT_STREAM or MediaType.APPLICATION_STREAM_JSON)
 - More info on [the Spring WebFlux.fn reference documentation](http://docs.spring.io/spring-framework/docs/5.0.3.RELEASE/spring-framework-reference/web.html#web-reactive-server-functional)
+
+If you run into a possible solution can be found in the branch functional_reactive_endpoint
 
 ## A Trading Signal Service
 Once you have your API working it would be nice if we can also find a way to do some useful stuff with the stream of bitcoindata.
