@@ -115,7 +115,7 @@ mvn spring-boot:run
 If everything started correctly you should be able to look at a stream of data in the following way:
 
 ``
-curl http://localhost:8085/streamData
+curl http://localhost:8085/annotationBitcoinPrices
 ``
 
 In a browser it should work as well. I did with Chrome and that went fine. The thing is the browser needs to know how to deal with Server Sent events.
@@ -137,13 +137,13 @@ So first you implement the HandlerFunction to return the bitcoindatastream. You 
 
 To route requests to that handler, you need to expose a RouterFunction to Spring Boot. You can do this by creating a @Bean of type RouterFunction<ServerResponse>.
 
-Modify that class so that GET requests to "/streamDataFunctional" are routed to the handler you just implemented.
+Modify that class so that GET requests to "/streamData" are routed to the handler you just implemented.
 
 *Some tips*
 - There is already a unit/integration test available for the endpoint 
   (`nl.sogeti.reactivespring.bitcoindata.FunctionalStyleBitcoinDataConfigurationTest`)
 - The content type "application/json" results in a finite collection
-- Browsers only can consume a stream by producing Server Sent events. (`MediaType.TEXT_EVENT_STREAM`)
+- Browsers only can consume a stream by producing Server Sent events. (`MediaType.TEXT_EVENT_STREAM or MediaType.APPLICATION_STREAM_JSON)
 - More info on [the Spring WebFlux.fn reference documentation](http://docs.spring.io/spring-framework/docs/5.0.3.RELEASE/spring-framework-reference/web.html#web-reactive-server-functional)
 
 ## A Trading Signal Service
