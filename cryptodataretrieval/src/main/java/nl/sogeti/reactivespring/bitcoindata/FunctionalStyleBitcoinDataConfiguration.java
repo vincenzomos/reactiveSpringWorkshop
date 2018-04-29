@@ -58,7 +58,7 @@ public class FunctionalStyleBitcoinDataConfiguration {
         RouterFunction<?> routes(RouteHandler handler){
             return route(GET("/streamData"), handler::streamData)
                     .andRoute(GET("/tradingAlerts"), handler::streamSignals)
-                    .andRoute(GET("/streamDataHotFlux"), handler::streamDataHotFlux);
+                    .andRoute(GET("/hotStreamData"), handler::streamDataHotFlux);
         }
 
         @Bean

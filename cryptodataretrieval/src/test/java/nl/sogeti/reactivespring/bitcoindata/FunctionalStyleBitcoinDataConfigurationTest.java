@@ -41,6 +41,7 @@ public class FunctionalStyleBitcoinDataConfigurationTest {
                     .returnResult(OHLCData.class)
                     .getResponseBody()
                     .take(3)
+                    .log()
                     .collectList()
                     .block();
 
