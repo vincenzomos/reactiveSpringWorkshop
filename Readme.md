@@ -155,7 +155,7 @@ Also now there already is a constant for the minimal price move in percentage (0
 Signals.
 Try to use this to make the method return a stream of Signals. 
   
-Once again make the necessary adjustments to create and endpoint for this service.  
+Once again make the necessary adjustments to create an endpoint named `/streamSignals` for this service.  
 
 
 ### Cold Stream vs Hot Stream
@@ -181,6 +181,12 @@ By calling publish() we are given a ConnectableFlux. This means that calling sub
 
 Now try to add a ConnectableFlux of data in the BitcoinDataService and create another endpoint for that named `"/hotStreamData".`
 And then test if this stream will continue.
+
+#Additional Resources
+
+- [Servlet vs Reactive stacks in 5 usecases](https://www.infoq.com/presentations/servlet-reactive-stack?utm_source=youtube&utm_medium=link&utm_campaign=qcontalks)
+
+- Lots of presentations can be found on youtube. Look for the speakers: Rossen Stoyanchev, Mark Heckler, Josh Long
 
 
 
