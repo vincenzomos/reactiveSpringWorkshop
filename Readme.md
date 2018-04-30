@@ -1,4 +1,4 @@
-# Reactor Core and Spring 5  workshop
+# Reactor Core and Spring 5 workshop
 
 This workshop is set up as  an introduction to work with 
 Reactive Streams in  Spring 5. From the Background of non-reactive Java development, going reactive can be quite a steep learning curve.
@@ -90,7 +90,6 @@ In the SubscribeDemo test class there are also showing the principles of backpre
 The test `demoSubcriberImpl` will just read all items at once, while the other method `demoSubcriberWithAdaptedBackpressure` instructs the publisher to send 2 items
 at a time.
 
-
  
 ### Practicing with Flux and Mono
  In the project reactivespring there is a package [nl.sogeti.reactivespring.basics]. In here are a couple of classes prefixed with Part<number>... can be found.
@@ -136,7 +135,7 @@ So first you implement the HandlerFunction to return the bitcoindatastream. You 
 
 To route requests to that handler, you need to expose a RouterFunction to Spring Boot. You can do this by creating a @Bean of type RouterFunction<ServerResponse>.
 
-Modify that class so that GET requests to "/streamData" are routed to the handler you just implemented.
+Modify that class so that GET requests to `/streamData` are routed to the handler you just implemented.
 
 *Some tips*
 - There is already a unit/integration test available for the endpoint 
@@ -145,17 +144,21 @@ Modify that class so that GET requests to "/streamData" are routed to the handle
 - Browsers only can consume a stream by producing Server Sent events. (`MediaType.TEXT_EVENT_STREAM or MediaType.APPLICATION_STREAM_JSON)
 - More info on [the Spring WebFlux.fn reference documentation](http://docs.spring.io/spring-framework/docs/5.0.3.RELEASE/spring-framework-reference/web.html#web-reactive-server-functional)
 
-If you run into a possible solution can be found in the branch functional_reactive_endpoint
-
 ## A Trading Signal Service
 Once you have your API working it would be nice if we can also find a way to do some useful stuff with the stream of bitcoindata.
 
 There is already an existing Service named `TradingService` We would like to have a service that can
-stream Signals based on price movements. The service already has a couple of simple convenience methods to notice and create Signals.
+stream Signals based on price movements. The service already has a couple of simple convenience methods to notice and create Signals. These methods are 
+based on a mechanism that uses a sliding window over all the prices and keeps on checking if a big move is noticed.
+
 Also now there already is a constant for the minimal price move in percentage (0.2)  That is pretty low but off course you would like to see some
-Signals.
-Try to use this to make the method return a stream of Signals. 
-  
+Signals for the sake of seeing some events.
+Try to use this to make the method return a stream of Signals.  
+
+Tip: 
+- You could use the operator buffer for this. [Documentation for buffer operator](https://projectreactor.io/docs/core/release/api/reactor/core/publisher/Flux.html#buffer--)  
+- Off course if you like to implement things different feel free to do so :)
+
 Once again make the necessary adjustments to create an endpoint named `/streamSignals` for this service.  
 
 
@@ -165,7 +168,7 @@ This is because the data we return are is static, fixed length streams which are
 A more realistic use case for reactive might be something that happens infinitely. In this example bitcoin price changes will never stop off course.
 These types of streams are called hot streams, as they are always running and can be subscribed to at any point in time, missing the start of the data.
 
-One way to create a hot stream is by converting a cold stream into one. Let’s create a Flux that starts when we startup the application and keeps on s
+One way to create a hot stream is by converting a cold stream into a hot one. Let’s create a Flux that starts when we startup the application and keeps on 
 streaming the bitcoinprices without starting over.
 This would simulate an infinite stream of data coming from an external resource:
 
@@ -180,14 +183,16 @@ ConnectableFlux<Object> publish = Flux.create(fluxSink -> {
 
 By calling publish() we are given a ConnectableFlux. This means that calling subscribe() won’t cause it start emitting, allowing us to add multiple subscriptions:
 
-Now try to add a ConnectableFlux of data in the BitcoinDataService and create another endpoint for that named `"/hotStreamData".`
+Now try to add a ConnectableFlux of data in the BitcoinDataService at startup and create another endpoint for that named `"/hotStreamData".`
 And then test if this stream will continue.
 
 #Additional Resources
 
-- [Servlet vs Reactive stacks in 5 usecases](https://www.infoq.com/presentations/servlet-reactive-stack?utm_source=youtube&utm_medium=link&utm_campaign=qcontalks)
+- One of the best presentations IMHO is : [Servlet vs Reactive stacks in 5 usecases](https://www.infoq.com/presentations/servlet-reactive-stack?utm_source=youtube&utm_medium=link&utm_campaign=qcontalks)
 
 - Lots of presentations can be found on youtube. Look for the speakers: Rossen Stoyanchev, Mark Heckler, Josh Long
 
-
-
+#Solutions
+*Only use if you really tried ...*
+-  the branch named `flux_mono_solutions` contains the solutions for the Flux Mono practices
+-  The branch named `functional_reactive_endpoint` has a solution for the '/streamData' 
