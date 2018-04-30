@@ -41,17 +41,6 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 @ComponentScan(basePackages ={"nl.sogeti.reactivespring", "nl.sogeti.reactivespring.bitcoindata"})
 public class BitcoinDataProvidingApplication {
 
-//    @Bean
-//    Path bitcoinDataPath() {
-//        Path filePath = null;
-//        try {
-//            filePath =  Paths.get(ClassLoader.getSystemResource("bitcoin_minuteData.csv").toURI());
-//        } catch (URISyntaxException e) {
-//            e.printStackTrace();
-//        }
-//        return filePath;
-//    }
-
     @Bean
     List<String> bitcoinDataList() {
         System.out.println("TESTLOG : Start creating datalines ");

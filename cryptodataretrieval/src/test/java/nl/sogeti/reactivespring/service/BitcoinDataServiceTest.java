@@ -21,7 +21,6 @@ import static org.junit.Assert.*;
 
 public class BitcoinDataServiceTest {
 
-    private static Path filePath = null;
     private static List<String> datalines = null;
     private BitcoinDataService service;
 
@@ -33,14 +32,11 @@ public class BitcoinDataServiceTest {
     public void setUp() {
         service = new BitcoinDataService(datalines);
     }
+
     @Test
     public void getBitcoinData(){
-        long lineCount = 0;
-        try {
-            lineCount = Files.lines(filePath).count();
-        } catch (IOException e) {
-            fail("Unexpected IOException, test failed");
-        }
+        long lineCount = datalines.size();
+
         StepVerifier.withVirtualTime(() -> service.getBitcoinData())
                 .thenAwait(Duration.ofSeconds(lineCount))
                 .expectNextCount(lineCount)
