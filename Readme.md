@@ -137,7 +137,7 @@ To route requests to that handler, you need to expose a RouterFunction to Spring
 
 Modify that class so that GET requests to `/streamData` are routed to the handler you just implemented.
 
-*Some tips*
+**Some tips**
 - There is already a unit/integration test available for the endpoint 
   (`nl.sogeti.reactivespring.bitcoindata.FunctionalStyleBitcoinDataConfigurationTest`)
 - The content type "application/json" results in a finite collection
@@ -186,13 +186,15 @@ By calling publish() we are given a ConnectableFlux. This means that calling sub
 Now try to add a ConnectableFlux of data in the BitcoinDataService at startup and create another endpoint for that named `"/hotStreamData".`
 And then test if this stream will continue.
 
-#Additional Resources
+##Additional Resources
 
 - One of the best presentations IMHO is : [Servlet vs Reactive stacks in 5 usecases](https://www.infoq.com/presentations/servlet-reactive-stack?utm_source=youtube&utm_medium=link&utm_campaign=qcontalks)
 
 - Lots of presentations can be found on youtube. Look for the speakers: Rossen Stoyanchev, Mark Heckler, Josh Long
 
-#Solutions
-*Only use if you really tried ...*
--  the branch named `flux_mono_solutions` contains the solutions for the Flux Mono practices
--  The branch named `functional_reactive_endpoint` has a solution for the '/streamData' 
+##Solutions
+**Only use if you really tried huh... ;)**
+-  the branch  `flux_mono_solutions` contains the solutions for the Flux Mono practices
+-  The branch  `functional_reactive_endpoint` has a solution for the `/streamData` 
+-  The branch  `streamsignal_solution` has a solution for the `/streamSignals` 
+-  The branch  `possible_solution` includes a solution for the ConnectableFlux. 
