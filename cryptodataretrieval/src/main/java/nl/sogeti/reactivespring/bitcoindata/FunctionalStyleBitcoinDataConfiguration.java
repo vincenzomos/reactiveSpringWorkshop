@@ -27,48 +27,21 @@ public class FunctionalStyleBitcoinDataConfiguration {
             @Autowired
             private BitcoinDataService service;
 
-            @Autowired
-            private TradingService tradingService;
-
             public RouteHandler(BitcoinDataService service) {
                 this.service = service;
             }
 
             public Mono<ServerResponse> streamData(ServerRequest request) {
-                return ServerResponse.ok()
-                        .contentType(MediaType.TEXT_EVENT_STREAM)
-                        .body(service.getBitcoinData(), OHLCData.class);
+                /* IMPLEMENT YOUR STREAMING RESPONSE HERE */
+                return null;
             }
 
-            public Mono<ServerResponse> streamDataHotFlux(ServerRequest request) {
-                return ServerResponse.ok()
-                        .contentType(MediaType.TEXT_EVENT_STREAM)
-                        .body(service.getHotBitcoinData(), OHLCData.class);
-            }
-
-            public Mono<ServerResponse> streamDataConnect(ServerRequest request) {
-                return ServerResponse.ok()
-                        .contentType(MediaType.TEXT_EVENT_STREAM)
-                        .body(service.getHotBitcoinDataFromConnectable(), OHLCData.class);
-            }
-
-            public Mono<ServerResponse> streamSignals(ServerRequest request) {
-                return ServerResponse.ok()
-                        .contentType(MediaType.TEXT_EVENT_STREAM)
-                        .body(tradingService.getTradingSignals(), Signal.class);
-            }
         }
 
         @Bean
         RouterFunction<?> routes(RouteHandler handler){
-            return route(GET("/streamData"), handler::streamData)
-                    .andRoute(GET("/tradingAlerts"), handler::streamSignals)
-                    .andRoute(GET("/streamDataHotFlux"), handler::streamDataHotFlux)
-                    .andRoute(GET("/streamDataConnect"), handler::streamDataHotFlux);
+            /* IMPLEMENT YOUR ROUTERS HERE */
+            return null;
         }
 
-        @Bean
-        ConnectableFlux<OHLCData> hotBitcoinData(BitcoinDataService service) {
-            return service.getBitcoinData().publish();
-        }
     }

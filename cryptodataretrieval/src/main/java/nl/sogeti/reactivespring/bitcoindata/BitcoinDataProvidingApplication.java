@@ -32,25 +32,10 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 /**
  * Example reactive application that will stream bitcoinprices
  *
- * Disclaimer: This class mixes the BaseApplication and the Routing of the endpoints. In a real world application
- * it is a better practice to have these in separated files.
- * But for this workshop this might be a better way to get an idea of
- * the integration of these parts.
  */
 @SpringBootApplication
 @ComponentScan(basePackages ={"nl.sogeti.reactivespring", "nl.sogeti.reactivespring.bitcoindata"})
 public class BitcoinDataProvidingApplication {
-
-//    @Bean
-//    Path bitcoinDataPath() {
-//        Path filePath = null;
-//        try {
-//            filePath =  Paths.get(ClassLoader.getSystemResource("bitcoin_minuteData.csv").toURI());
-//        } catch (URISyntaxException e) {
-//            e.printStackTrace();
-//        }
-//        return filePath;
-//    }
 
     @Bean
     List<String> bitcoinDataList() {

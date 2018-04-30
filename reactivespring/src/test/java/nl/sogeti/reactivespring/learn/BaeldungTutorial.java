@@ -20,7 +20,7 @@ public class BaeldungTutorial {
                 .publish();
 
         publish.subscribe(System.out::println);
-        publish.subscribe(item -> System.out.println("stream 2: "+ item));
+        publish.subscribe(item -> System.out.println("stream 2: " + item));
         publish.connect();
     }
 }
