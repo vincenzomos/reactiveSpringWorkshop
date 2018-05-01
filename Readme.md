@@ -186,13 +186,13 @@ By calling publish() we are given a ConnectableFlux. This means that calling sub
 Now try to add a ConnectableFlux of data in the BitcoinDataService at startup and create another endpoint for that named `"/hotStreamData".`
 And then test if this stream will continue.
 
-##Additional Resources
+## Additional Resources
 
-- One of the best presentations IMHO is : [Servlet vs Reactive stacks in 5 usecases](https://www.infoq.com/presentations/servlet-reactive-stack?utm_source=youtube&utm_medium=link&utm_campaign=qcontalks)
-
+- One of the best presentations on this subject IMHO is : [Servlet vs Reactive stacks in 5 usecases](https://www.infoq.com/presentations/servlet-reactive-stack?utm_source=youtube&utm_medium=link&utm_campaign=qcontalks)
+- [Nice overview of Reactive programming in Java](http://edegier.nl/presentations/jvmcon-reactive-programming-java)
 - Lots of presentations can be found on youtube. Look for the speakers: Rossen Stoyanchev, Mark Heckler, Josh Long
 
-##Solutions
+## Solutions
 **Only use if you really tried huh... ;)**
 -  the branch  `flux_mono_solutions` contains the solutions for the Flux Mono practices
 -  The branch  `functional_reactive_endpoint` has a solution for the `/streamData` 
