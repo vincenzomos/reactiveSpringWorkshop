@@ -38,7 +38,8 @@ public class FunctionalStyleBitcoinDataConfiguration {
 
         }
 
-        @Bean
+        //Uncomment this bean to create the routerfunction
+        //@Bean
         RouterFunction<?> routes(RouteHandler handler){
             /* IMPLEMENT YOUR ROUTERS HERE */
             return null;
