@@ -37,6 +37,7 @@ public class Part03StepVerifierTest {
 
 	@Test
 	public void expectElementsThenComplete() {
+
 		workshop.expectFooBarComplete(Flux.just("foo", "bar"));
 	}
 
@@ -63,7 +64,7 @@ public class Part03StepVerifierTest {
 
 //========================================================================================
 
-	@Test
+	@Test(timeout = 3000)
 	public void countWithVirtualTime() {
 		workshop.expect3600Elements(() -> Flux.interval(Duration.ofSeconds(1)).take(3600));
 	}

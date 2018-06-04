@@ -13,7 +13,7 @@ public class Part05Merge {
 
 //========================================================================================
 
-	// TODO Merge flux1 and flux2 values with interleave
+	// TODO Merge flux1 and flux2 values with interleave (processing elements as soon as they come)
 	Flux<User> mergeFluxWithInterleave(Flux<User> flux1, Flux<User> flux2) {
 		return null;
 	}

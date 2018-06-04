@@ -67,7 +67,7 @@ You can allways later on dive a bit more in the theory. Links to some useful res
  But really, knowing this cardinality is useful. This is because a few operations only make sense for one of the two types, and because it can be more expressive (imagine findOne() in a repository).
  
 
-### Getting Data from a Flux
+### Excercise 1: Getting Data from a Flux
 In the module reactivespring there is a unittest in  [nl.sogeti.reactivespring.basics] named SubscribeDemo with a method to get the data from the Flux. But the test fails.
 In order to make the data really start flowing you need to subscribe on the Flux. Try to make the test work.
 
@@ -81,7 +81,7 @@ Now let’s go through the sequence that we have logged one by one:
 4. onComplete() – This is called last, after receiving the last element. There’s actually a onError() as well, which would be called if there is an exception, but in this case, there isn’t    
 
 
-### BackPressure
+### Excercise 2: BackPressure
 The next thing we should consider is backpressure. In our example, the subscriber is telling the producer to push every single element at once.
 This could end up becoming overwhelming for the subscriber, consuming all of its resources.
 Backpressure is when a downstream can tell an upstream to send it fewer data in order to prevent it from being overwhelmed.
@@ -91,14 +91,14 @@ The test `demoSubcriberImpl` will just read all items at once, while the other m
 at a time.
 
  
-### Practicing with Flux and Mono
+### Excercise 3:  Practicing with Flux and Mono
  In the project reactivespring there is a package [nl.sogeti.reactivespring.basics]. In here are a couple of classes prefixed with Part<number>... can be found.
  All these are some practice classes to implement some constructs for Monos and Fluxes. In here you'll also find some examples where Stepverifier is used. StepVerifier is a nice convenience class that makes it possible to verify how the stream you produce will behave. I made a selection of practices from the following source [https://github.com/reactor/lite-rx-api-hands-on.git])
 Please try to solve them. 
 
 Useful info can be found here [Reactor documentation](http://projectreactor.io/docs/core/release/reference/docs/index.html)
 
-### A reactive restservice
+### Excercise 4: A reactive restservice
 
 Spring WebFlux comes in two flavors of web applications: annotation based and functional.
 
@@ -119,7 +119,7 @@ curl http://localhost:8085/annotationBitcoinPrices
 
 In a browser it should work as well. I did with Chrome and that went fine. The thing is the browser needs to know how to deal with Server Sent events.
 
-### Create your first HandlerFunction + RouterFunction
+### Excercise 5: Create your first HandlerFunction + RouterFunction
 Now you have seen how a service is implemented using the annotations. For a change it might be nice to implement a service the functional-reactive way.
 
 
@@ -144,7 +144,7 @@ Modify that class so that GET requests to `/streamData` are routed to the handle
 - Browsers only can consume a stream by producing Server Sent events. (`MediaType.TEXT_EVENT_STREAM or MediaType.APPLICATION_STREAM_JSON)
 - More info on [the Spring WebFlux.fn reference documentation](http://docs.spring.io/spring-framework/docs/5.0.3.RELEASE/spring-framework-reference/web.html#web-reactive-server-functional)
 
-## A Trading Signal Service
+## Excercise 7:  A Trading Signal Service
 Once you have your API working it would be nice if we can also find a way to do some useful stuff with the stream of bitcoindata.
 
 There is already an existing Service named `TradingService` We would like to have a service that can
@@ -162,7 +162,7 @@ Tip:
 Once again make the necessary adjustments to create an endpoint named `/streamSignals` for this service.  
 
 
-### Cold Stream vs Hot Stream
+### Excercise 8: Cold Stream vs Hot Stream
 When we implemented the endpoint  `/streamData`  you might have noticed that it is just showing the same data on each request all over again.
 This is because the data we return are is static, fixed length streams which are easy to deal with.
 A more realistic use case for reactive might be something that happens infinitely. In this example bitcoin price changes will never stop off course.

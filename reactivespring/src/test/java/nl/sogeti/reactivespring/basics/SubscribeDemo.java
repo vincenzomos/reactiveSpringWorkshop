@@ -21,7 +21,8 @@ public class SubscribeDemo
 
         Flux.just(1, 2, 3, 4)
                 .doOnNext(elements::add)
-                .log();
+                .log()
+                .subscribe();
 
         assertThat(elements, contains(1, 2, 3, 4));
     }
