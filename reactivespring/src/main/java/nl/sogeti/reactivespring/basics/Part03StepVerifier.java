@@ -20,6 +20,7 @@ import nl.sogeti.reactivespring.basics.domain.User;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
+import java.time.Duration;
 import java.util.function.Supplier;
 
 /**
@@ -27,24 +28,29 @@ import java.util.function.Supplier;
  *
  * @author Sebastien Deleuze
  * @see <a href="http://projectreactor.io/docs/test/release/api/reactor/test/StepVerifier.html">StepVerifier Javadoc</a>
+ *
+ *
  */
 public class Part03StepVerifier {
 
 //========================================================================================
 
 	// TODO Use StepVerifier to check that the flux parameter emits "foo" and "bar" elements then completes successfully.
+	/* HINTS: - You can create a StepVerifier by using the static method create
+	*         - Allways complete your StepVerifier with .verify() otherwise nothing will be checked. */
 	void expectFooBarComplete(Flux<String> flux) {
 
 		 StepVerifier.create(flux)
 				.expectNext("foo")
 				.expectNext("bar")
-				.expectComplete();
-
+				.expectComplete()
+				.verify();
 	}
 
 //========================================================================================
 
 	// TODO Use StepVerifier to check that the flux parameter emits "foo" and "bar" elements then a RuntimeException error.
+	// HINT: you can expect and error with expectError()
 	void expectFooBarError(Flux<String> flux) {
 		fail();
 	}
@@ -67,7 +73,9 @@ public class Part03StepVerifier {
 //========================================================================================
 
 	// TODO Expect 3600 elements at intervals of 1 second, and verify quicker than 3600s
-	// by manipulating virtual time thanks to StepVerifier#withVirtualTime, notice how long the test takes
+	/** by manipulating virtual time thanks to StepVerifier#withVirtualTime, notice how long the test takes
+	*	Hints: - Make sure you instruct the StepVerifier to wait for the virtual time to finish. Use the thenAwait method for this.
+	 */
 	void expect3600Elements(Supplier<Flux<Long>> supplier) {
 		fail();
 	}
