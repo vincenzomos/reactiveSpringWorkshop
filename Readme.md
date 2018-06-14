@@ -187,8 +187,10 @@ Now try to add a ConnectableFlux of data in the BitcoinDataService at startup an
 And then test if this stream will continue.
 
 ## Additional Resources
+- Some good presentations on this subject are :
+  * [Servlet vs Reactive stacks in 5 usecases](https://www.infoq.com/presentations/servlet-reactive-stack?utm_source=youtube&utm_medium=link&utm_campaign=qcontalks)
+  * [Reactor 3 the reactive foundation for Java 8 and Spring 5] (https://www.youtube.com/watch?v=WJK6chc7w3o)
 
-- One of the best presentations on this subject IMHO is : [Servlet vs Reactive stacks in 5 usecases](https://www.infoq.com/presentations/servlet-reactive-stack?utm_source=youtube&utm_medium=link&utm_campaign=qcontalks)
 - [Nice overview of Reactive programming in Java](http://edegier.nl/presentations/jvmcon-reactive-programming-java)
 - Lots of presentations can be found on youtube. Look for the speakers: Rossen Stoyanchev, Mark Heckler, Josh Long
 
