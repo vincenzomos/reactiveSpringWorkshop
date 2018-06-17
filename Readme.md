@@ -1,4 +1,4 @@
-# Reactor Core and Spring 5  workshop
+# Reactor Core and Spring 5 workshop
 
 This workshop is set up as  an introduction to work with 
 Reactive Streams in  Spring 5. From the Background of non-reactive Java development, going reactive can be quite a steep learning curve.
@@ -67,7 +67,7 @@ You can allways later on dive a bit more in the theory. Links to some useful res
  But really, knowing this cardinality is useful. This is because a few operations only make sense for one of the two types, and because it can be more expressive (imagine findOne() in a repository).
  
 
-### Getting Data from a Flux
+### Excercise 1: Getting Data from a Flux
 In the module reactivespring there is a unittest in  [nl.sogeti.reactivespring.basics] named SubscribeDemo with a method to get the data from the Flux. But the test fails.
 In order to make the data really start flowing you need to subscribe on the Flux. Try to make the test work.
 
@@ -81,7 +81,7 @@ Now let’s go through the sequence that we have logged one by one:
 4. onComplete() – This is called last, after receiving the last element. There’s actually a onError() as well, which would be called if there is an exception, but in this case, there isn’t    
 
 
-### BackPressure
+### Excercise 2: BackPressure
 The next thing we should consider is backpressure. In our example, the subscriber is telling the producer to push every single element at once.
 This could end up becoming overwhelming for the subscriber, consuming all of its resources.
 Backpressure is when a downstream can tell an upstream to send it fewer data in order to prevent it from being overwhelmed.
@@ -90,16 +90,15 @@ In the SubscribeDemo test class there are also showing the principles of backpre
 The test `demoSubcriberImpl` will just read all items at once, while the other method `demoSubcriberWithAdaptedBackpressure` instructs the publisher to send 2 items
 at a time.
 
-
  
-### Practicing with Flux and Mono
+### Excercise 3:  Practicing with Flux and Mono
  In the project reactivespring there is a package [nl.sogeti.reactivespring.basics]. In here are a couple of classes prefixed with Part<number>... can be found.
  All these are some practice classes to implement some constructs for Monos and Fluxes. In here you'll also find some examples where Stepverifier is used. StepVerifier is a nice convenience class that makes it possible to verify how the stream you produce will behave. I made a selection of practices from the following source [https://github.com/reactor/lite-rx-api-hands-on.git])
 Please try to solve them. 
 
 Useful info can be found here [Reactor documentation](http://projectreactor.io/docs/core/release/reference/docs/index.html)
 
-### A reactive restservice
+### Excercise 4: A reactive restservice
 
 Spring WebFlux comes in two flavors of web applications: annotation based and functional.
 
@@ -120,8 +119,7 @@ curl http://localhost:8085/annotationBitcoinPrices
 
 In a browser it should work as well. I did with Chrome and that went fine. The thing is the browser needs to know how to deal with Server Sent events.
 
-
-### Create your first HandlerFunction + RouterFunction
+### Excercise 5: Create your first HandlerFunction + RouterFunction
 Now you have seen how a service is implemented using the annotations. For a change it might be nice to implement a service the functional-reactive way.
 
 
@@ -137,34 +135,40 @@ So first you implement the HandlerFunction to return the bitcoindatastream. You 
 
 To route requests to that handler, you need to expose a RouterFunction to Spring Boot. You can do this by creating a @Bean of type RouterFunction<ServerResponse>.
 
-Modify that class so that GET requests to "/streamDataFunctional" are routed to the handler you just implemented.
+Modify that class so that GET requests to `/streamData` are routed to the handler you just implemented.
 
-*Some tips*
+**Some tips**
 - There is already a unit/integration test available for the endpoint 
   (`nl.sogeti.reactivespring.bitcoindata.FunctionalStyleBitcoinDataConfigurationTest`)
 - The content type "application/json" results in a finite collection
-- Browsers only can consume a stream by producing Server Sent events. (`MediaType.TEXT_EVENT_STREAM`)
+- Browsers only can consume a stream by producing Server Sent events. (`MediaType.TEXT_EVENT_STREAM or MediaType.APPLICATION_STREAM_JSON)
 - More info on [the Spring WebFlux.fn reference documentation](http://docs.spring.io/spring-framework/docs/5.0.3.RELEASE/spring-framework-reference/web.html#web-reactive-server-functional)
 
-## A Trading Signal Service
+## Excercise 7:  A Trading Signal Service
 Once you have your API working it would be nice if we can also find a way to do some useful stuff with the stream of bitcoindata.
 
 There is already an existing Service named `TradingService` We would like to have a service that can
-stream Signals based on price movements. The service already has a couple of simple convenience methods to notice and create Signals.
+stream Signals based on price movements. The service already has a couple of simple convenience methods to notice and create Signals. These methods are 
+based on a mechanism that uses a sliding window over all the prices and keeps on checking if a big move is noticed.
+
 Also now there already is a constant for the minimal price move in percentage (0.2)  That is pretty low but off course you would like to see some
-Signals.
-Try to use this to make the method return a stream of Signals. 
-  
+Signals for the sake of seeing some events.
+Try to use this to make the method return a stream of Signals.  
+
+Tip: 
+- You could use the operator buffer for this. [Documentation for buffer operator](https://projectreactor.io/docs/core/release/api/reactor/core/publisher/Flux.html#buffer--)  
+- Off course if you like to implement things different feel free to do so :)
+
 Once again make the necessary adjustments to create an endpoint named `/streamSignals` for this service.  
 
 
-### Cold Stream vs Hot Stream
+### Excercise 8: Cold Stream vs Hot Stream
 When we implemented the endpoint  `/streamData`  you might have noticed that it is just showing the same data on each request all over again.
 This is because the data we return are is static, fixed length streams which are easy to deal with.
 A more realistic use case for reactive might be something that happens infinitely. In this example bitcoin price changes will never stop off course.
 These types of streams are called hot streams, as they are always running and can be subscribed to at any point in time, missing the start of the data.
 
-One way to create a hot stream is by converting a cold stream into one. Let’s create a Flux that starts when we startup the application and keeps on s
+One way to create a hot stream is by converting a cold stream into a hot one. Let’s create a Flux that starts when we startup the application and keeps on 
 streaming the bitcoinprices without starting over.
 This would simulate an infinite stream of data coming from an external resource:
 
@@ -179,14 +183,20 @@ ConnectableFlux<Object> publish = Flux.create(fluxSink -> {
 
 By calling publish() we are given a ConnectableFlux. This means that calling subscribe() won’t cause it start emitting, allowing us to add multiple subscriptions:
 
-Now try to add a ConnectableFlux of data in the BitcoinDataService and create another endpoint for that named `"/hotStreamData".`
+Now try to add a ConnectableFlux of data in the BitcoinDataService at startup and create another endpoint for that named `"/hotStreamData".`
 And then test if this stream will continue.
 
-#Additional Resources
+## Additional Resources
+- Some good presentations on this subject are :
+  * [Servlet vs Reactive stacks in 5 usecases](https://www.infoq.com/presentations/servlet-reactive-stack?utm_source=youtube&utm_medium=link&utm_campaign=qcontalks)
+  * [Reactor 3 the reactive foundation for Java 8 and Spring 5] (https://www.youtube.com/watch?v=WJK6chc7w3o)
 
-- [Servlet vs Reactive stacks in 5 usecases](https://www.infoq.com/presentations/servlet-reactive-stack?utm_source=youtube&utm_medium=link&utm_campaign=qcontalks)
-
+- [Nice overview of Reactive programming in Java](http://edegier.nl/presentations/jvmcon-reactive-programming-java)
 - Lots of presentations can be found on youtube. Look for the speakers: Rossen Stoyanchev, Mark Heckler, Josh Long
 
-
-
+## Solutions
+**Only use if you really tried huh... ;)**
+-  the branch  `flux_mono_solutions` contains the solutions for the Flux Mono practices
+-  The branch  `functional_reactive_endpoint` has a solution for the `/streamData` 
+-  The branch  `streamsignal_solution` has a solution for the `/streamSignals` 
+-  The branch  `possible_solution` includes a solution for the ConnectableFlux. 
